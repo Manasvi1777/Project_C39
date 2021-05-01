@@ -1,5 +1,6 @@
 var PLAY = 1;
 var END = 0;
+var WIN = 2;
 var gameState = PLAY;
 
 var trex, trex_running, trex_collided;
@@ -120,11 +121,9 @@ function draw() {
        gameOver.visible = true;
        restart.visible = true;
     }
-    if(score === 500)
-    {
-      win.scale=2
-       win.visible=true;
-       gameState = END;
+    if(score >= 500)
+    {   
+       gameState = WIN;
     }
   }
    else if (gameState === END) {
@@ -147,7 +146,27 @@ function draw() {
         reset();
       }
    }
-  
+   else if (gameState === WIN) {
+     
+    win.scale=2
+    win.visible=true;
+    ground.velocityX = 0;
+    trex.velocityY = 0
+   
+    //change the trex animation
+    trex.changeAnimation("collided", trex_collided);
+   
+    //set lifetime of the game objects so that they are never destroyed
+  obstaclesGroup.setLifetimeEach(-1);
+  cloudsGroup.setLifetimeEach(-1);
+   
+   obstaclesGroup.setVelocityXEach(0);
+   cloudsGroup.setVelocityXEach(0);
+   
+   checkPointSound.stop();
+   dieSound.stop();
+   jumpSound.stop();
+ }
  
   //stop trex from falling down
   trex.collide(invisibleGround);
